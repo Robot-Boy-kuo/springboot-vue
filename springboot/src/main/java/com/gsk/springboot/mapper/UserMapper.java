@@ -9,8 +9,6 @@ import java.util.List;
 //mapper是数据库查询的接口，专门与数据库交互
 public interface UserMapper {
 
-
-
     @Select("SELECT * from sys_user")
     List<User> findAll();
 
