@@ -3,3 +3,22 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.ml-5{
+    margin-left: 5px;
+}
+
+.pd-10{
+    padding: 10px;
+}
+
+.mr-5{
+    margin-right: 5px;
+}
+
+.text-overflow-hidden {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+}
