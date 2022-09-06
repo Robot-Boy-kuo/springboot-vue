@@ -1,5 +1,6 @@
 package com.gsk.springboot.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor//lombok 创建有参构造方法
 @TableName(value = "sys_user")
 public class User {
-    @TableId//指定主键
+    @TableId(value = "id",type = IdType.AUTO)//指定主键
     private Integer id;
     private String username;
     //不展示密码，忽略某个实体不展示给前端
