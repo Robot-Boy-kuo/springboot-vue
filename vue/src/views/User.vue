@@ -76,7 +76,8 @@
     </el-pagination>
   </div>
 
-  <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="30%">
+<!--//实现点击弹窗外的空白部分不关闭弹窗-->
+  <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
     <el-form label-width="80px" size="small">
       <el-form-item label="用户名">
         <el-input v-model="form.username" autocomplete="off"></el-input>
@@ -170,6 +171,7 @@ export default {
     handleEdit(row){
       this.form=row
       this.dialogFormVisible=true
+
 
     },
     handleDelete(id){
