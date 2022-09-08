@@ -13,10 +13,8 @@
     </div>
 
     <el-menu-item index="/">
-      <template slot="title">
         <i class="el-icon-house"></i>
         <span slot="title">主页</span>
-      </template>
     </el-menu-item>
 
     <el-submenu index="2">
