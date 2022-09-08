@@ -1,15 +1,21 @@
 package com.gsk.springboot.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gsk.springboot.controller.dto.UserDto;
+import com.gsk.springboot.common.Constants;
+import com.gsk.springboot.controller.dto.UserDTO;
 import com.gsk.springboot.entity.User;
+import com.gsk.springboot.exception.ServiceException;
+
 import com.gsk.springboot.mapper.UserMapper;
 import com.gsk.springboot.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -27,17 +33,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private static final Log LOG =Log.get();
 
     @Override
-    public boolean login(UserDto userDto) {
+    public UserDTO login(UserDTO userDTO) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username",userDto.getUsername());
-        queryWrapper.eq("password",userDto.getPassword());
+        queryWrapper.eq("username",userDTO.getUsername());
+        queryWrapper.eq("password",userDTO.getPassword());
+
+        //注意此处try-catch和throw的使用顺序
+        User one;
         try {
-            User one = getOne(queryWrapper);
-            return one!=null;
+            one = getOne(queryWrapper);//从数据库查询用户信息
         }catch (Exception e){
             //数据库中查到了不止一条数据
             LOG.error(e);
-            return false;
+            throw new ServiceException(Constants.CODE_500,"系统错误");
+        }
+        if (one!=null){
+            BeanUtils.copyProperties(one,userDTO);
+            return userDTO;
+        }else{
+            throw new ServiceException(Constants.CODE_600,"用户名或密码错误");
         }
 
     }

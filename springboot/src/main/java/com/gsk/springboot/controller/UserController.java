@@ -5,7 +5,9 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gsk.springboot.controller.dto.UserDto;
+import com.gsk.springboot.common.Constants;
+import com.gsk.springboot.common.Result;
+import com.gsk.springboot.controller.dto.UserDTO;
 import com.gsk.springboot.entity.User;
 import com.gsk.springboot.service.IUserService;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +37,7 @@ public class UserController {
     private IUserService userService;
 
     @PostMapping("/login")
-    public boolean login(@RequestBody UserDto userDto){
+    public Result login(@RequestBody UserDTO userDto){
         String username = userDto.getUsername();
         String password = userDto.getPassword();
         /*
@@ -44,28 +46,30 @@ public class UserController {
         * 2.长度不为0
         * */
         if(StrUtil.isBlank(username)||StrUtil.isBlank(password)){
-            return false;
+            return Result.error(Constants.CODE_400,"参数错误");
         }
-        return userService.login(userDto);
+        UserDTO userDTO = userService.login(userDto);
+        return Result.success(userDTO);
     }
 
 
 
     //新增或更新
     @PostMapping
-    public boolean save(@RequestBody User user){
-        return userService.saveOrUpdate(user);
+    public Result save(@RequestBody User user){
+        return Result.success(userService.saveOrUpdate(user));
+
     }
 
     //删除
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id){
-        return userService.deleteById(id);
+    public Result delete(@PathVariable Integer id){
+        return Result.success(userService.deleteById(id));
     }
 
     @PostMapping("/del/batch")
-    public boolean deleteBatch(@RequestBody List<Integer> ids){
-        return userService.deleteMulti(ids);
+    public Result deleteBatch(@RequestBody List<Integer> ids){
+        return Result.success(userService.deleteMulti(ids));
         }
 
     //查询所有
@@ -77,8 +81,8 @@ public class UserController {
 
     //根据id查询
     @GetMapping("/{id}")
-    public User findOne(@PathVariable Integer id) {
-        return userService.searchById(id);
+    public Result findOne(@PathVariable Integer id) {
+        return Result.success(userService.searchById(id));
     }
 
     //分页查询
