@@ -47,12 +47,12 @@ public class UserController {
     //删除
     @DeleteMapping("/{id}")
     public boolean delete(@PathVariable Integer id){
-        return userService.removeById(id);
+        return userService.deleteById(id);
     }
 
     @PostMapping("/del/batch")
     public boolean deleteBatch(@RequestBody List<Integer> ids){
-        return userService.removeBatchByIds(ids);
+        return userService.deleteMulti(ids);
         }
 
     //查询所有
@@ -65,29 +65,17 @@ public class UserController {
     //根据id查询
     @GetMapping("/{id}")
     public User findOne(@PathVariable Integer id) {
-        return userService.getById(id);
+        return userService.searchById(id);
     }
 
     //分页查询
     @GetMapping("/page")
     public Page<User> findPage(@RequestParam Integer pageNum,
-                                    @RequestParam Integer pageSize,
+                               @RequestParam Integer pageSize,
                                @RequestParam(defaultValue = "") String username,
                                @RequestParam(defaultValue = "") String email,
                                @RequestParam(defaultValue = "") String address) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        //数据库中存在null值用字符串模糊匹配无法进行匹配，需要先进行判断
-        if (!"".equals(username)){
-            queryWrapper.like("username",username);//中间有AND
-        }
-        if (!"".equals(email)){
-            queryWrapper.like("email", email);
-        }
-        if (!"".equals(address)){
-            queryWrapper.like("address", address);
-        }
-        queryWrapper.orderByDesc("id");
-        return userService.page(new Page<>(pageNum, pageSize), queryWrapper);
+        return userService.refresh(pageNum,pageSize,username,email,address);
 
     }
 
