@@ -20,7 +20,6 @@
     <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>
     <el-popconfirm
         class="ml-5"
-
         confirm-button-text='确定'
         cancel-button-text='再想想'
         icon="el-icon-info"
@@ -30,8 +29,14 @@
     >
       <el-button type="danger" slot="reference">批量删除<i class="el-icon-remove-outline"></i></el-button>
     </el-popconfirm>
-    <el-button type="primary" class="ml-5">导入<i class="el-icon-bottom"></i></el-button>
-    <el-button type="primary">导出<i class="el-icon-top"></i></el-button>
+
+    <el-upload
+        action="http://localhost:8888/user/import" style="display: inline-block" :show-file-list="false" :on-success="handleExcelImportSuccess" accept=".xlsx">
+        <el-button type="primary" class="ml-5" >导入<i class="el-icon-bottom"></i></el-button>
+    </el-upload>
+
+
+    <el-button type="primary" @click="exp" class="ml-5">导出<i class="el-icon-top"></i></el-button>
   </div>
 
   <el-table :data="tableData" border stripe :header-cell-class-name="headerBG" @selection-change="handleSelectionChange">
@@ -113,7 +118,7 @@ export default {
       tableData: [],
       total:0,
       pageNum:1,
-      pageSize:5,
+      pageSize:10,
       username:"",
       email:"",
       address:"",
@@ -222,7 +227,14 @@ export default {
     handleCurrentChange(pageNum){
       this.pageNum=pageNum
       this.load()
-    }
+    },
+    exp(){
+      window.open("http://localhost:8888/user/export")
+    },
+    handleExcelImportSuccess(){
+      this.$message.success("文件导入成功！")
+      this.load()
+    },
   }
 }
 </script>
