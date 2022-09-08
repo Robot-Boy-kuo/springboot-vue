@@ -45,14 +45,14 @@ export default {
       this.$refs['userForm'].validate((valid)=>{
         if (valid){//表单校验合法
           this.request.post("/user/login",this.user).then(res =>{
-            if (!res){
-              this.$message.error("用户名或密码错误")
-            }else{
+            if (res.code === "200"){//根据返回码确定是否登陆成功
+              localStorage.setItem("user",JSON.stringify(res.data)) //存储用户信息到浏览器
               this.$router.push("/")
+              this.$message.success("登录成功")
+            }else{
+              this.$message.error(res.message)
             }
           })
-        }else{
-          return false;
         }
       })
 

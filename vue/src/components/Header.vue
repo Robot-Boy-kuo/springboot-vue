@@ -8,9 +8,9 @@
 
   <el-dropdown style="width: 140px;cursor: pointer">
     <div style="display: inline-block">
-      <img src="https://img1.baidu.com/it/u=2908330017,2329821371&fm=253&fmt=auto?w=500&h=500" alt=""
+      <img :src="user.avatarUrl" alt=""
             style="width: 30px;border-radius: 50%;position: relative;top: 10px;right: 5px">
-      <span>RobotBoy</span><i class="el-icon-arrow-down" style="margin-left:5px"></i>
+      <span>{{user.nickname}}</span><i class="el-icon-arrow-down" style="margin-left:5px"></i>
     </div>
     <el-dropdown-menu slot="dropdown" style="width: 100px;text-align: center">
       <el-dropdown-item style="font-size: 14px;padding: 5px 0">个人信息</el-dropdown-item>
@@ -24,11 +24,20 @@
 
 <script>
 export default {
-  name: "header",
+  name: "Header",
   props:{
     collapseBtnClass:String,
     collapse:Function,
-
+  },
+  computed:{
+    currentPathName(){
+      return this.$store.state.currentPathName; //需要监听的数据
+    }
+  },
+  data(){
+    return{
+      user:localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
+    }
   }
 }
 </script>
