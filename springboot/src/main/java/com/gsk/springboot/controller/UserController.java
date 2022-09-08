@@ -1,27 +1,23 @@
 package com.gsk.springboot.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gsk.springboot.controller.dto.UserDto;
+import com.gsk.springboot.entity.User;
+import com.gsk.springboot.service.IUserService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
-import javax.servlet.Servlet;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-
-import com.gsk.springboot.service.IUserService;
-import com.gsk.springboot.entity.User;
-
-
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -37,6 +33,23 @@ public class UserController {
 
     @Resource
     private IUserService userService;
+
+    @PostMapping("/login")
+    public boolean login(@RequestBody UserDto userDto){
+        String username = userDto.getUsername();
+        String password = userDto.getPassword();
+        /*
+        * 校验字符串
+        * 1.非null
+        * 2.长度不为0
+        * */
+        if(StrUtil.isBlank(username)||StrUtil.isBlank(password)){
+            return false;
+        }
+        return userService.login(userDto);
+    }
+
+
 
     //新增或更新
     @PostMapping

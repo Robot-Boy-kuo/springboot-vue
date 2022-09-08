@@ -1,7 +1,9 @@
 package com.gsk.springboot.service.impl;
 
+import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gsk.springboot.controller.dto.UserDto;
 import com.gsk.springboot.entity.User;
 import com.gsk.springboot.mapper.UserMapper;
 import com.gsk.springboot.service.IUserService;
@@ -21,6 +23,24 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+
+    private static final Log LOG =Log.get();
+
+    @Override
+    public boolean login(UserDto userDto) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",userDto.getUsername());
+        queryWrapper.eq("password",userDto.getPassword());
+        try {
+            User one = getOne(queryWrapper);
+            return one!=null;
+        }catch (Exception e){
+            //数据库中查到了不止一条数据
+            LOG.error(e);
+            return false;
+        }
+
+    }
 
     @Autowired
     private UserMapper userMapper;
