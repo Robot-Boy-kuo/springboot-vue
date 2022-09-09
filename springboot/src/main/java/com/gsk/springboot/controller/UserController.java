@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gsk.springboot.common.Constants;
 import com.gsk.springboot.common.Result;
@@ -35,6 +36,24 @@ public class UserController {
 
     @Resource
     private IUserService userService;
+
+    @PostMapping("/register")
+    public Result register(@RequestBody UserDTO userDTO){
+
+        String username = userDTO.getUsername();
+        String password = userDTO.getPassword();
+        /*
+         * 校验字符串
+         * 1.非null
+         * 2.长度不为0
+         * */
+        if(StrUtil.isBlank(username)||StrUtil.isBlank(password)){
+            return Result.error(Constants.CODE_400,"参数错误");
+        }
+        return Result.success(userService.register(userDTO));
+
+    }
+
 
     @PostMapping("/login")
     public Result login(@RequestBody UserDTO userDto){
@@ -72,10 +91,17 @@ public class UserController {
         return Result.success(userService.deleteMulti(ids));
         }
 
+    @GetMapping("/username/{username}")
+    public Result findOne(@PathVariable String username) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        return Result.success(userService.getOne(queryWrapper));
+    }
+
     //查询所有
     @GetMapping("/")
-    public List<User> findAll(){
-        return userService.list();
+    public Result findAll(){
+        return Result.success(userService.list());
     }
 
 
@@ -87,13 +113,12 @@ public class UserController {
 
     //分页查询
     @GetMapping("/page")
-    public Page<User> findPage(@RequestParam Integer pageNum,
+    public Result findPage(@RequestParam Integer pageNum,
                                @RequestParam Integer pageSize,
                                @RequestParam(defaultValue = "") String username,
                                @RequestParam(defaultValue = "") String email,
                                @RequestParam(defaultValue = "") String address) {
-        return userService.refresh(pageNum,pageSize,username,email,address);
-
+        return Result.success(userService.refresh(pageNum,pageSize,username,email,address));
     }
 
     //实现导入和导出
@@ -132,7 +157,7 @@ public class UserController {
     }
 
     @PostMapping("/import")
-    public boolean imp(MultipartFile file) throws IOException {
+    public Result imp(MultipartFile file) throws IOException {
         InputStream inputStream = file.getInputStream();
         ExcelReader reader = ExcelUtil.getReader(inputStream);
 
@@ -140,7 +165,7 @@ public class UserController {
         List<User> list = reader.readAll(User.class);
         userService.saveBatch(list);
         System.out.println(list);
-        return true;
+        return Result.success(true);
     }
 
 }

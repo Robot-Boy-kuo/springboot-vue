@@ -1,6 +1,7 @@
 package com.gsk.springboot.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gsk.springboot.common.Result;
 import com.gsk.springboot.controller.dto.UserDTO;
 import com.gsk.springboot.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -30,5 +31,7 @@ public interface IUserService extends IService<User> {
                               String email,
                               String address);
 
-    UserDTO login(UserDTO user);
+    UserDTO login(UserDTO userDTO);
+
+    User register(UserDTO userDTO);
 }

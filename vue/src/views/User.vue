@@ -32,11 +32,11 @@
 
     <el-upload
         action="http://localhost:8888/user/import" style="display: inline-block" :show-file-list="false" :on-success="handleExcelImportSuccess" accept=".xlsx">
-        <el-button type="primary" class="ml-5" >导入<i class="el-icon-bottom"></i></el-button>
+        <el-button type="primary" class="ml-5" >导入<i class="el-icon-download"></i></el-button>
     </el-upload>
 
 
-    <el-button type="primary" @click="exp" class="ml-5">导出<i class="el-icon-top"></i></el-button>
+    <el-button type="primary" @click="exp" class="ml-5">导出<i class="el-icon-upload2"></i></el-button>
   </div>
 
   <el-table :data="tableData" border stripe :header-cell-class-name="headerBG" @selection-change="handleSelectionChange">
@@ -149,8 +149,8 @@ export default {
         }
       }).then(res => {
         console.log(res)
-        this.tableData=res.records
-        this.total=res.total
+        this.tableData=res.data.records
+        this.total=res.data.total
       })
 
       //首先将res字符串转换成json
@@ -181,7 +181,7 @@ export default {
     },
     handleDelete(id){
       this.request.delete("/user/" + id).then(res => {
-        if(res){
+        if(res.data){
           this.$message.success("删除成功")
           this.load()
         }else{
@@ -195,7 +195,7 @@ export default {
     delBatch(){
       let ids =  this.multipleSelection.map(v => v.id)  //将对象的数组变成纯id的数组，进行扁平化处理
       this.request.post("/user/del/batch", ids).then(res => {
-        if(res){
+        if(res.data){
           this.$message.success("批量删除成功")
           this.load()
         }else{
@@ -205,7 +205,7 @@ export default {
     },
     save(){
       this.request.post("/user",this.form).then(res => {
-        if(res){
+        if(res.data){
           this.$message.success("保存成功")
           this.dialogFormVisible=false
           this.load()
