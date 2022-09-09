@@ -54,7 +54,6 @@ public class UserController {
 
     }
 
-
     @PostMapping("/login")
     public Result login(@RequestBody UserDTO userDto){
         String username = userDto.getUsername();
@@ -70,8 +69,6 @@ public class UserController {
         UserDTO userDTO = userService.login(userDto);
         return Result.success(userDTO);
     }
-
-
 
     //新增或更新
     @PostMapping

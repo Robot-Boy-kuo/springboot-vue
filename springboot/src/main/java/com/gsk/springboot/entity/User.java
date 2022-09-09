@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -29,7 +32,6 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
       @ApiModelProperty("id")
         @TableId(value = "id", type = IdType.AUTO)
       private Integer id;
@@ -40,9 +42,20 @@ public class User implements Serializable {
 
       @Alias("密码")
       @ApiModelProperty("密码")
+      //@JsonIgnore
       private String password;
 
-      @Alias("昵称")
+      @JsonIgnore
+      public String getPassword() {
+        return password;
+      }
+
+      @JsonProperty
+      public void setPassword(String password) {
+        this.password = password;
+      }
+
+  @Alias("昵称")
       @ApiModelProperty("昵称")
       private String nickname;
 
@@ -66,5 +79,6 @@ public class User implements Serializable {
       @ApiModelProperty("头像")
       private String avatarUrl;
 
+      private int priority;
 
 }

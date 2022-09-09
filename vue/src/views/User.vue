@@ -83,8 +83,8 @@
 
 <!--//实现点击弹窗外的空白部分不关闭弹窗-->
   <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
-    <el-form label-width="80px" size="small">
-      <el-form-item label="用户名">
+    <el-form label-width="80px" size="small" >
+      <el-form-item label="用户名" prop="username">
         <el-input v-model="form.username" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="昵称">
@@ -98,6 +98,9 @@
       </el-form-item>
       <el-form-item label="地址">
         <el-input v-model="form.address" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="form.password" autocomplete="off" show-password></el-input>
       </el-form-item>
 
     </el-form>
@@ -114,6 +117,7 @@
 export default {
   name: "User",
   data(){
+
     return{
       tableData: [],
       total:0,
@@ -122,13 +126,15 @@ export default {
       username:"",
       email:"",
       address:"",
+      password: "******",
 
       form:{},
 
       dialogFormVisible:false,
 
       multipleSelection:[],
-      headerBG:'headerBG'
+      headerBG:'headerBG',
+
     }
   },
   created() {
@@ -145,7 +151,8 @@ export default {
           pageSize:this.pageSize,
           username:this.username,
           email:this.email,
-          address:this.address
+          address:this.address,
+          password:this.password
         }
       }).then(res => {
         console.log(res)
@@ -176,7 +183,6 @@ export default {
     handleEdit(row){
       this.form=row
       this.dialogFormVisible=true
-
 
     },
     handleDelete(id){

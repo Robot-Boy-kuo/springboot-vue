@@ -80,9 +80,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             LOG.error(e);
             throw new ServiceException(Constants.CODE_500,"系统错误");
         }
-        if (one!=null){
+        if (one!=null && one.getPriority()==1){
             BeanUtils.copyProperties(one,userDTO);
             return userDTO;
+        }else if(one!=null && one.getPriority()==0){
+            throw new ServiceException(Constants.CODE_600,"权限不足！请联系管理员");
         }else{
             throw new ServiceException(Constants.CODE_600,"用户名或密码错误");
         }
